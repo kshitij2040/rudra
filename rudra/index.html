@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>PIZZA MAKER</title>
+    <style type="text/css">
+body{ background:#323D46;}
+.container{width: 500px; margin: 0 auto; }
+
+    </style>
+
+  </head>
+  <body>
+<div class="container">
+  <canvas id="canvas" width="500" height="500">
+</div>
+<script type="text/javascript">
+
+  function cutPizza(n)
+  {
+      // Case 1
+      document.write( (360 % n == 0) ? "1" : "0");
+      document.write( (n <= 360) ? "1" : "0");
+      document.write( (((n * (n + 1)) / 2) <= 360) ? "1" : "0");
+  }
+
+  let n = 7;
+  cutPizza(n);
+
+  var CX = 250;
+  var CY = 250;
+  var SLICES_COUNT = 8;
+  var RADIUS = 150;
+  var MAX_DISTANCE = 0.15;
+  var MAXRAD = Math.PI * 2; // 360 º
+  var PEPPERONI_SIZE = 56;
+  var PEPPERONI_RADIUS = 15;
+
+  var BORDER_COLOR = '#f2d28c';
+  var CHEESE_COLOR = '#ffffbc';
+  var PEPPERONI_COLOR = '#ee4400';
+
+  var canvas = document.getElementById('canvas');
+  var context = canvas.getContext('2d');
+
+  var pepperoni = function() {
+    var canvas = document.createElement('canvas');
+    canvas.width = PEPPERONI_SIZE;
+    canvas.height = PEPPERONI_SIZE;
+
+    var context = canvas.getContext('2d');
+    context.fillStyle = CHEESE_COLOR;
+    context.fillRect(0, 0, PEPPERONI_SIZE, PEPPERONI_SIZE);
+
+    var cords = [
+      [0, 0], [canvas.width, 0],
+      [canvas.width / 2, canvas.height / 2],
+      [0, canvas.height], [canvas.width, canvas.height]
+    ];
+
+    context.fillStyle = PEPPERONI_COLOR;
+
+    cords.forEach(function(cord) {
+      var x = cord[0];
+      var y = cord[1];
+      context.moveTo(x, y);
+      context.arc(x, y, PEPPERONI_RADIUS, 0, MAXRAD, 0);
+      context.fill();
+    });
+
+    return context.createPattern(canvas, "repeat");
+  }();
+
+  function drawPie(x, y, r, starts, ends, color) {
+    context.beginPath();
+    context.fillStyle = color;
+    context.moveTo(x, y);
+    context.arc(x, y, r, starts, ends, 0);
+    context.fill();
+  }
+
+  function drawSlices() {
+    for (var index = 0; index < SLICES_COUNT; index++) {
+      var sliceSize = MAXRAD / SLICES_COUNT;
+      var fromRadians = MAXRAD * (index / SLICES_COUNT);
+      var toRadians = fromRadians + sliceSize;
+      var halfRadians = fromRadians + (sliceSize / 2);
+      var distance = RADIUS * Math.random() * MAX_DISTANCE;
+      var cx = distance * Math.cos(halfRadians) + CX;
+      var cy = distance * Math.sin(halfRadians) + CY;
+
+      drawPie(cx, cy, RADIUS, fromRadians, toRadians, BORDER_COLOR);
+      drawPie(cx, cy, RADIUS * 0.85, fromRadians, toRadians, pepperoni);
+    }
+  }
+
+  drawSlices();
+
+
+</script>
+<div id="forest-ext-shadow-host">
+
+  <head></head>
+<div   id="root">
+
+</div>
+</div>
+  </body>
+</html>
